@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: poc-plb
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    password: root
+    url: jdbc:mysql://localhost/plbconsult?serverTimezone=Europe/Paris
+    username: root
+  jpa:
+    show-sql: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+      naming:
+        implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
+  autoconfigure:
+    exclude: org.springframework.ai.autoconfigure.ollama.OllamaAutoConfiguration
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      embedding:
+        options:
+          model: text-embedding-ada-002
+    vectorstore:
+      elasticsearch:
+        initialize-schema: true
+        index-name: poc-plb
+server:
+  port: 7979
