@@ -1,4 +1,4 @@
-package org.formation.pocplb.model;
+package org.formation.pocplb.model.plbsi;
 
 import jakarta.persistence.*;
 

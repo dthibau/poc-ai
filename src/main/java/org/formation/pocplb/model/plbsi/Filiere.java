@@ -1,7 +1,6 @@
-package org.formation.pocplb.model;
+package org.formation.pocplb.model.plbsi;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,6 +26,7 @@ public class Filiere {
 
     @Lob
     @Column(name = "fil_description", columnDefinition = "mediumtext")
+    @JsonIgnore
     private String description;
 
     @Column(name = "fil_titre")

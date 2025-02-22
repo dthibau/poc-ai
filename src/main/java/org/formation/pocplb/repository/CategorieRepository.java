@@ -1,8 +1,8 @@
 package org.formation.pocplb.repository;
 
 
-import org.formation.pocplb.model.Categorie;
-import org.formation.pocplb.model.CategorieConnexe;
+import org.formation.pocplb.model.plbsi.Categorie;
+import org.formation.pocplb.model.plbsi.CategorieConnexe;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

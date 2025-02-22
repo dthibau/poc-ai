@@ -1,7 +1,7 @@
 package org.formation.pocplb.repository;
 
 
-import org.formation.pocplb.model.Filiere;
+import org.formation.pocplb.model.plbsi.Filiere;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -1,4 +1,4 @@
 package org.formation.pocplb.model;
 
-public record Question(String question) {
+public record Question(String instruction, String profil) {
 }

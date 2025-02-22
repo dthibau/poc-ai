@@ -1,26 +1,40 @@
-package org.formation.pocplb.model;
+package org.formation.pocplb.model.plbsi;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonView;
+
 import jakarta.persistence.*;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
-@Table(name = "partenaire")
+@Table(name = "session_lieu")
 @Data
-public class Partenaire {
+public class SessionLieu {
 
+    public final static String SYNONYMS_SEPARATOR="|";
     @Id
-    private Integer id;
-
-    @NotNull
+    private Long id;
     private String nom;
 
-    private String web;
+    private String emplacement;
 
+    @Column(name = "emplacement_synonyms")
+    private String emplacementSynonyms;
+
+
+
+
+    private Integer rang;
+    /**
+     * Partenaire==null => PLB
+     */
+
+    
+    @OneToMany(mappedBy = "sessionLieu", cascade = CascadeType.ALL)
+    List<Session> sessions = new ArrayList<>();
 
     @Override
     public boolean equals(Object obj) {
@@ -30,7 +44,7 @@ public class Partenaire {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        Partenaire other = (Partenaire) obj;
+        SessionLieu other = (SessionLieu) obj;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -49,6 +63,7 @@ public class Partenaire {
 
     @Override
     public String toString() {
-        return nom;
+        return emplacement;
     }
+
 }

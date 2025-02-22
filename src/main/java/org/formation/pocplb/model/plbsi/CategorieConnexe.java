@@ -1,4 +1,4 @@
-package org.formation.pocplb.model;
+package org.formation.pocplb.model.plbsi;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -26,6 +26,7 @@ public class CategorieConnexe {
 	private Categorie linkedCategorie;
 	
 	@Column(name="`order`")
+	@JsonIgnore
 	private int order;
 
 

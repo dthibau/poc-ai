@@ -1,16 +1,13 @@
-package org.formation.pocplb.model;
+package org.formation.pocplb.model.plbsi;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 import org.springframework.stereotype.Indexed;
 
 import javax.validation.constraints.Min;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,16 +19,7 @@ public class Formation implements Serializable, Comparable<Formation> {
 
     private static final long serialVersionUID = -211404718465836235L;
 
-    @Lob
-    @Column(name = "moyens_pedagogiques", columnDefinition = "longtext")
-    @JsonIgnore
-    String moyensPedagogiques = "";
-    @Lob
-    @Column(name = "modalites_suivi", columnDefinition = "longtext")
-    @JsonIgnore
-    String modalitesSuivi = "";
-    @Column(name = "for_nouveaute", columnDefinition = "enum('oui','non')")
-    String nouveaute = "non";
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "formationGenerator")
     @SequenceGenerator(name = "formationGenerator", sequenceName = "formation_id", initialValue = 700000, allocationSize = 1)
@@ -47,8 +35,6 @@ public class Formation implements Serializable, Comparable<Formation> {
     private Integer duree;
     @Column(name = "for_prix", columnDefinition = "decimal")
     private Float prix;
-    @Column(name = "for_origine", columnDefinition = "text")
-    private String origine;
 
     @Column(name = "for_niveau")
     private String niveau = "Fondamental";
@@ -88,11 +74,13 @@ public class Formation implements Serializable, Comparable<Formation> {
     private String participants;
     @Lob
     @Column(name = "for_travaux_pratiques", columnDefinition = "mediumtext")
+    @JsonIgnore
     private String travauxPratiques;
     @Column(name = "for_replace")
     private String libelleCertification;
     @Column(name = "for_infos", columnDefinition = "mediumtext")
     @Lob
+    @JsonIgnore
     private String descriptifCertification;
     @Column(name = "for_top10", columnDefinition = "tinyint")
     private Integer top10 = 0;
@@ -110,39 +98,37 @@ public class Formation implements Serializable, Comparable<Formation> {
             @JoinColumn(name = "id_formation_suivante", referencedColumnName = "id_formation")})
     @JsonIgnore
     private List<Formation> formationAssociees;
-    @OneToMany(mappedBy = "formation", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private List<FormationPartenaire> formationsPartenaire = new ArrayList<FormationPartenaire>();
+
     @ManyToOne(optional = true)
     @JsonIgnore
     private FormationMutualisees formationMutualisees;
 
 
+    public String getTravauxPratiquesAsString() {
+        return travauxPratiques != null ? HTMLUtils.getData(travauxPratiques) : "";
+    }
+    public String getDescriptifCertificationAsString() {
+        return descriptifCertification != null ? HTMLUtils.getData(descriptifCertification) : "";
+    }
 
-    public String getMoyensPedagogiquesAsString() {
-        return HTMLUtils.getData(moyensPedagogiques);
-    }
-    public String getModaliteSuiviAsString() {
-        return HTMLUtils.getData(modalitesSuivi);
-    }
-    public String getDescriptifAsString() {
-        return HTMLUtils.getData(descriptif);
+   public String getDescriptifAsString() {
+        return descriptif != null ? HTMLUtils.getData(descriptif) : "";
     }
 
     public String getContenuAsString() {
-        return HTMLUtils.getData(contenu);
+        return contenu != null ? (contenu.length() > 3000 ? HTMLUtils.getData(contenu.substring(0,3000)) : HTMLUtils.getData(contenu)) : "";
     }
     public String getObjectifsOperationnelsAsString() {
-        return HTMLUtils.getData(objectifs_operationnels);
+        return objectifs_operationnels != null ? HTMLUtils.getData(objectifs_operationnels) : "";
     }
     public String getObjectifsPedagogiquesAsString() {
-        return HTMLUtils.getData(objectifs_pedagogiques);
+        return objectifs_pedagogiques != null ? HTMLUtils.getData(objectifs_pedagogiques) : "";
     }
     public String getPrerequisAsString() {
-        return HTMLUtils.getData(prerequis);
+        return prerequis != null ? HTMLUtils.getData(prerequis) : "";
     }
     public String getParticipantsAsString() {
-        return HTMLUtils.getData(participants);
+        return participants != null ? HTMLUtils.getData(participants) : "";
     }
 
 
@@ -186,29 +172,9 @@ public class Formation implements Serializable, Comparable<Formation> {
 
 
 
-    @Transient
-    public List<Partenaire> getPartenaires() {
 
-        return getFormationsPartenaire().stream().map(fp -> fp.getPartenaire()).collect(Collectors.toList());
 
-    }
 
-    @Transient
-    public String getFormationsPartenaireAsString() {
-        StringBuffer sbf = new StringBuffer();
-        boolean bFirst = true;
-        if (getFormationsPartenaire() != null) {
-            for (FormationPartenaire fp : getFormationsPartenaire()) {
-                if (bFirst) {
-                    sbf.append(fp.getPartenaire().getNom() + "(" + fp.getPrix() + ")");
-                    bFirst = false;
-                } else {
-                    sbf.append("/" + fp.getPartenaire().getNom() + "(" + fp.getPrix() + ")");
-                }
-            }
-        }
-        return sbf.toString();
-    }
 
     @Transient
     @JsonIgnore
@@ -253,44 +219,6 @@ public class Formation implements Serializable, Comparable<Formation> {
             }
         }
         return null;
-    }
-
-    @Transient
-    public FormationFiliere getFormationFilierePrincipale() {
-        return formationFilieres.stream().filter(ff -> ff.isPrincipale()).findFirst()
-                .orElseThrow(() -> new IllegalStateException("Formation sans catégorie " + this));
-
-    }
-
-
-    @Transient
-    public boolean containsFiliere(Filiere filiere) {
-        for (FormationFiliere ff : formationFilieres) {
-            if (ff.getFiliere().equals(filiere)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Transient
-    public boolean containsCategorie(Categorie categorie) {
-        for (FormationFiliere ff : formationFilieres) {
-            if (ff.getCategorie() != null && ff.getCategorie().equals(categorie)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Transient
-    public boolean containsPartenaire(Partenaire partenaire) {
-        for (FormationPartenaire fp : formationsPartenaire) {
-            if (fp.getPartenaire() != null && fp.getPartenaire().equals(partenaire)) {
-                return true;
-            }
-        }
-        return false;
     }
 
 
