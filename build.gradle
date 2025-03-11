@@ -5,14 +5,16 @@ plugins {
 }
 
 group = 'org.formation'
-version = '0.0.2-SNAPSHOT-CHROMADB'
+version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(17)
 	}
 }
-
+springBoot {
+	mainClass.set('org.formation.pocplb.ElasticPlbAiApplication')  // Spécifie la classe principale
+}
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
