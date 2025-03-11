@@ -13,6 +13,7 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
 
 import java.util.List;
 import java.util.Map;
@@ -36,19 +37,18 @@ public class ChatClientService {
         this.vectorStoreService = vectorStoreService;
     }
 
-    public Answer getAnswer(Question question) {
+    public Flux<String> getAnswer(Question question) {
 
         List<Document> results = vectorStoreService.searchTopN(question.profil(), 3);
         PromptTemplate promptTemplate = new PromptTemplate(ragPromptTemplate);
-        String content = this.chatClient.prompt(promptTemplate.create(
+        return this.chatClient.prompt(promptTemplate.create(
                         Map.of("input", question.profil(), "instruction", question.instruction(),"documents", String.join("\n", results.stream().map(Document::getText).toList())),
                         OpenAiChatOptions.builder()
                                 .build()))
-                .call()
+                .stream()
                 .content();
 
-        return new Answer(results.stream().map(d -> d.getId()).collect(Collectors.joining(", ")),
-                content);
+
 
 
     }

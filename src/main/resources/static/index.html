@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat AI</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 700px; margin: auto; }
+        #chat-box {
+            border: 1px solid #ccc;
+            padding: 10px;
+            height: 300px;
+            overflow-y: auto;
+            border-radius: 10px;
+            background: #f9f9f9;
+            white-space: pre-line; /* Autorise les retours à la ligne */
+            word-wrap: break-word; /* Casse les mots longs sans espaces pour éviter le scroll horizontal */
+            overflow-wrap: break-word;
+        }
+        .message {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-radius: 10px;
+            max-width: 100%; /* Empêche les débordements */
+            display: block; /* Force le respect des règles de texte */
+            word-break: break-word; /* Coupe uniquement les mots longs */
+            white-space: pre-wrap; /* Garde les retours à la ligne et évite les coupures bizarres */
+            overflow-wrap: break-word; /* Permet de casser les longs mots sans espaces */
+        }
+        .user-message { background: #007bff; color: white; align-self: flex-end; text-align: right; }
+        .ai-message { background: #e1ffc7; color: black; align-self: flex-start; text-align: left; }
+        #input-container {
+            display: flex;
+            margin-top: 10px;
+        }
+        textarea {
+            flex: 1;
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+            height: 50px;
+        }
+        button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            border-radius: 10px;
+            border: none;
+            background: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Chat AI</h2>
+<div id="chat-box"></div>
+
+<div id="input-container">
+    <textarea id="user-input" placeholder="Tapez votre question..."></textarea>
+    <button onclick="sendMessage()">Envoyer</button>
+</div>
+
+<script>
+    function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const chatBox = document.getElementById("chat-box");
+        const userMessage = inputField.value.trim();
+
+        if (!userMessage) return;
+
+        // Ajouter le message utilisateur
+        const userDiv = document.createElement("div");
+        userDiv.classList.add("message", "user-message");
+        userDiv.textContent = userMessage;
+        chatBox.appendChild(userDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        inputField.value = "";
+
+        // Ajouter une bulle pour l'IA qui sera mise à jour en continu
+        const aiDiv = document.createElement("div");
+        aiDiv.classList.add("message", "ai-message");
+        chatBox.appendChild(aiDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        // Récupération du flux via EventSource
+        const eventSource = new EventSource("/chat?message=" + encodeURIComponent(userMessage));
+        let responseBuffer = "";
+        eventSource.onmessage = (event) => {
+            console.log("#" + event.data + "#");
+            responseBuffer += event.data; // Accumule proprement sans espaces superflus
+            aiDiv.innerHTML = responseBuffer.replace(/&nbsp;/g, ' ');
+            chatBox.scrollTop = chatBox.scrollHeight;
+        };
+
+        eventSource.onerror = () => {
+            eventSource.close();
+        };
+    }
+</script>
+
+</body>
+</html>
