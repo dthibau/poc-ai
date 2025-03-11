@@ -104,13 +104,19 @@ public class QuestionController {
                     @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
             }
     )
-    public Flux<String> askQuestion(@RequestParam String message) {
+    public Flux<String> askQuestion(@RequestParam String message, @RequestParam String uuid) {
         Question q = new Question(DEFAULT_INSTRUCTION, message);
         openB = true;
         openH3 = true;
-        return chatClientService.getAnswer(q).map(this::formatMessage);
+        return chatClientService.getAnswer(q, uuid).map(this::formatMessage);
     }
 
+    @GetMapping(value = "/converse", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> converse(@RequestParam String message, @RequestParam String uuid) {
+        openB = true;
+        openH3 = true;
+        return chatClientService.converse(message, uuid).map(this::formatMessage);
+    }
     @PostMapping("/askWithInstruction")
     @Operation(
             summary = "Pose une question à OpenAI avec des instructions spécifiques",

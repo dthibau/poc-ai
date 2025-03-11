@@ -4,7 +4,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.formation.pocplb.model.Answer;
 import org.formation.pocplb.model.Question;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -19,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
+import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
+
 @Service
 @Slf4j
 public class ChatClientService {
@@ -29,15 +34,16 @@ public class ChatClientService {
     @Value("classpath:templates/rag-prompt-template.st")
     private Resource ragPromptTemplate;
 
-    public ChatClientService(ChatClient.Builder chatClientBuilder, VectorStoreService vectorStoreService, SessionTools sessionTools) {
+    public ChatClientService(ChatClient.Builder chatClientBuilder, VectorStoreService vectorStoreService, SessionTools sessionTools, ChatMemory chatMemory) {
         this.chatClient = chatClientBuilder
-                .defaultAdvisors(new SimpleLoggerAdvisor())
+                .defaultAdvisors(new MessageChatMemoryAdvisor(chatMemory),
+                        new SimpleLoggerAdvisor())
                 .defaultTools(sessionTools)
                 .build();
         this.vectorStoreService = vectorStoreService;
     }
 
-    public Flux<String> getAnswer(Question question) {
+    public Flux<String> getAnswer(Question question, String uuid) {
 
         List<Document> results = vectorStoreService.searchTopN(question.profil(), 3);
         PromptTemplate promptTemplate = new PromptTemplate(ragPromptTemplate);
@@ -45,11 +51,22 @@ public class ChatClientService {
                         Map.of("input", question.profil(), "instruction", question.instruction(),"documents", String.join("\n", results.stream().map(Document::getText).toList())),
                         OpenAiChatOptions.builder()
                                 .build()))
+                .advisors(a -> a
+                        .param(CHAT_MEMORY_CONVERSATION_ID_KEY, uuid)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
                 .stream()
                 .content();
+    }
+    public Flux<String> converse(String userMessage, String uuid) {
 
-
-
+        PromptTemplate promptTemplate = new PromptTemplate(ragPromptTemplate);
+        return this.chatClient.prompt()
+                .user(userMessage)
+                .advisors(a -> a
+                        .param(CHAT_MEMORY_CONVERSATION_ID_KEY, uuid)
+                        .param(CHAT_MEMORY_RETRIEVE_SIZE_KEY, 100))
+                .stream()
+                .content();
 
     }
 

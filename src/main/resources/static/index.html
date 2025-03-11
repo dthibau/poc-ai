@@ -88,20 +88,32 @@
         chatBox.appendChild(aiDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
 
+        let uri = first ? "/chat?message=" + encodeURIComponent(userMessage) + "&uuid=" + uuid : "/converse?message=" + encodeURIComponent(userMessage) + "&uuid=" + uuid + "&first=false";
         // Récupération du flux via EventSource
-        const eventSource = new EventSource("/chat?message=" + encodeURIComponent(userMessage));
+        const eventSource = new EventSource(uri);
         let responseBuffer = "";
         eventSource.onmessage = (event) => {
             console.log("#" + event.data + "#");
             responseBuffer += event.data; // Accumule proprement sans espaces superflus
             aiDiv.innerHTML = responseBuffer.replace(/&nbsp;/g, ' ');
             chatBox.scrollTop = chatBox.scrollHeight;
+            first = false
         };
 
         eventSource.onerror = () => {
             eventSource.close();
         };
     }
+    function generateUUID() {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+            const r = Math.random() * 16 | 0,
+                v = c === 'x' ? r : (r & 0x3 | 0x8);
+            return v.toString(16);
+        });
+    }
+
+    const uuid = generateUUID();
+    var first = true;
 </script>
 
 </body>
