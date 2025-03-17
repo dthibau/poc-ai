@@ -71,7 +71,7 @@ public class QuestionController {
                     @ApiResponse(responseCode = "500", description = "Erreur interne du serveur")
             }
     )
-    public void indexFormation(String ref) {
+    public void indexFormation(@PathVariable String ref) {
         indexingService.indexFormation(ref);
     }
 
@@ -150,7 +150,8 @@ public class QuestionController {
         return chatModelService.getAnswer(question);
     }
 
-    private String formatMessage(String message) {
+    // Made public for testing
+    public String formatMessage(String message) {
         log.debug("Original message : {}", message);
         message = message.replace(" ", "&nbsp;");
         // Remplacer les retours à la ligne par <br />

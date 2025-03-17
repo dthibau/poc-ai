@@ -21,18 +21,22 @@ public class ChromaService {
 
     public ChromaService(@Value("${spring.ai.vectorstore.chroma.client.host}") String chromaHost,
                          @Value("${spring.ai.vectorstore.chroma.client.port}") String chromaPort) {
-        this.restClient = RestClient.builder()
-                .baseUrl(chromaHost+":"+chromaPort)
-                .build();
+        this.restClient = createRestClient(chromaHost, chromaPort);
         ResponseEntity<ChromaCollection[]> response = restClient.get()
                 .uri(CHROMA_COLLECTIONS)
                 .retrieve()
                 .toEntity(ChromaCollection[].class);
         chromaCollection = response.getBody()[0];
-
     }
+    
+    // Protected for testing
+    protected RestClient createRestClient(String host, String port) {
+        return RestClient.builder()
+                .baseUrl(host + ":" + port)
+                .build();
+    }
+    
     public int countDocuments() {
-
         return restClient.get()
                 .uri(COUNT_COLLECTION, chromaCollection.id())
                 .retrieve()

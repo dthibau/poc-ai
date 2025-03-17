@@ -34,6 +34,7 @@ spring:
         initialize-schema: true
         collection-name: plbsi
       elasticsearch:
+
         initialize-schema: true
         index-name: poc-plb
         url: http://localhost:9200
