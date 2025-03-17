@@ -151,11 +151,11 @@ public class QuestionController {
     }
 
     private String formatMessage(String message) {
-        log.info("Original message : {}", message);
+        log.debug("Original message : {}", message);
         message = message.replace(" ", "&nbsp;");
         // Remplacer les retours à la ligne par <br />
         message = message.replace("\n", "<br />");
-        log.info("Space and CR : {}", message);
+        log.debug("Space and CR : {}", message);
         // Transformer le markdown en HTML basique (gras et italique)
         int index=0;
         while((index = message.indexOf("**", index)) != -1) {
@@ -164,7 +164,7 @@ public class QuestionController {
             log.info("Current message : {}", message);
             openB = !openB;
         }
-        log.info("Bold : {}", message);
+        log.debug("Bold : {}", message);
 
         index = 0;
         String lookFor = openH3 ? "###" : "<br />";
@@ -174,11 +174,10 @@ public class QuestionController {
             } else {
                 message = message.substring(0, index) + "</h3>" + message.substring(index+6);
             }
-            log.info("H3 Current message : {}", message);
+            log.debug("H3 Current message : {}", message);
             openH3 = !openH3;
             lookFor = openH3 ? "###" : "<br />";
         }
-        //message = message.replace("*", "<i>").replace("*", "</i>");
 
 
         return message;

@@ -10,7 +10,7 @@ spring:
     url: jdbc:mysql://localhost/plbconsult?serverTimezone=Europe/Paris
     username: root
   jpa:
-    show-sql: true
+    show-sql: false
     open-in-view: false
     hibernate:
       ddl-auto: validate
@@ -49,6 +49,15 @@ logging:
               advisor: debug
 plbsi:
   url: http://localhost:8080
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    configprops:
+      show-values: ALWAYS
+
 ---
 spring:
   config:

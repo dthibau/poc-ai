@@ -10,7 +10,7 @@ services:
     volumes:
       # The default config specifies a persist_directory of /data.
       # Read more about deployments: https://docs.trychroma.com/deployment
-      - chroma-data:/data
+      - chroma-data:/chroma/chroma
     ports:
       - "8000:8000"
     healthcheck:

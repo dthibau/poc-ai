@@ -1,0 +1,42 @@
+
+networks:
+  net:
+    driver: bridge
+
+services:
+  chromadb:
+    image: chromadb/chroma:0.6.4.dev226
+
+    volumes:
+      # The default config specifies a persist_directory of /data.
+      # Read more about deployments: https://docs.trychroma.com/deployment
+      - chroma-data:/chroma/chroma
+    healthcheck:
+      # Adjust below to match your container port
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/v2/heartbeat" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - net
+
+  plbsi-ai:
+    image: dthibau/poc-plb:0.0.1-SNAPSHOT
+    ports:
+      - 7979:7979
+    environment:
+      - SPRING_AI_VECTORSTORE_CHROMA_CLIENT_HOST=http://chromadb
+      - SPRING_AI_VECTORSTORE_CHROMA_CLIENT_PORT=8000
+      - SPRING_AI_VECTORSTORE_CHROMA_INITIALIZE_SCHEMA=true
+      - SPRING_AI_VECTORSTORE_CHROMA_COLLECTION_NAME=plbsi
+      - SPRING_AI_OPENAI_API_KEY= ${OPENAI_API_KEY}
+      - SPRING_DATASOURCE_URL=jdbc:mysql://plb-rec.plb.fr:3306/plbconsult_rec
+      - SPRING_DATASOURCE_USERNAME=app_plbsi_rec
+      - SPRING_DATASOURCE_PASSWORD=Ghnv67g72F96kXx9N5BjE5UnWZjVzMVd47a34
+      - SPRING_PROFILES_ACTIVE=chroma,int
+    networks:
+      - net
+
+volumes:
+  chroma-data:
+    driver: local

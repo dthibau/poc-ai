@@ -13,7 +13,7 @@ java {
 	}
 }
 springBoot {
-	mainClass.set('org.formation.pocplb.ElasticPlbAiApplication')  // Spécifie la classe principale
+	mainClass.set('org.formation.pocplb.PlbsiAiApplication')  // Spécifie la classe principale
 }
 configurations {
 	compileOnly {
