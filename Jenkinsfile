@@ -1,6 +1,9 @@
 
 pipeline {
    agent any 
+   tools {
+        jdk 'JDK17'
+    }
 
   
     stages {
@@ -8,8 +11,12 @@ pipeline {
             steps {
                 echo 'Building image'
                 sh './gradlew clean bootBuildImage'
+                
                 script {
-                    def version = sh(script: "./gradlew -q printVersion", returnStdout: true).trim()
+                    def version = sh(script: "./gradlew properties | grep version:", returnStdout: true).substring(9).trim()
+                    echo "Version: ${version}"
+                    sh "docker tag poc-plb:${version} dthibau/poc-plb:${version}"
+                    def dockerImage = docker.image("dthibau/poc-plb:${version}")
                     docker.withRegistry('https://registry.hub.docker.com', 'dthibau_docker') {
                         dockerImage.push "$version"
                     }
@@ -18,7 +25,7 @@ pipeline {
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
+                    junit 'build/test-results/test/*.xml'
                 }
                 failure {
                     mail bcc: '', body: 'Docker build failed', cc: '', from: '', replyTo: '', subject: 'Build failed', to: 'david.thibau@gmail.com'

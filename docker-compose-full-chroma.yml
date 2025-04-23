@@ -21,6 +21,7 @@ services:
 
   plbsi-ai:
     image: dthibau/poc-plb:0.0.1-SNAPSHOT
+    pull_policy: always
     ports:
       - 7979:7979
     environment:
