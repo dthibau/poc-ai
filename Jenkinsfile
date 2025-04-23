@@ -1,3 +1,4 @@
+def version;
 
 pipeline {
    agent any 
@@ -13,7 +14,7 @@ pipeline {
                 sh './gradlew clean check bootBuildImage'
                 
                 script {
-                    def version = sh(script: "./gradlew properties | grep version:", returnStdout: true).substring(9).trim()
+                    version = sh(script: "./gradlew properties | grep version:", returnStdout: true).substring(9).trim()
                     echo "Version: ${version}"
                     sh "docker tag poc-plb:${version} dthibau/poc-plb:${version}"
                     def dockerImage = docker.image("dthibau/poc-plb:${version}")
@@ -36,6 +37,7 @@ pipeline {
             agent any
             environment {
                 OPENAI_API_KEY = 'openai_api_key'
+                VERSION = "${version}"
             }
             steps {
                 echo 'Restarting plbsi-ai'

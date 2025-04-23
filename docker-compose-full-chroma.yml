@@ -20,7 +20,7 @@ services:
       - net
 
   plbsi-ai:
-    image: dthibau/poc-plb:0.0.1-SNAPSHOT
+    image: dthibau/poc-plb:${VERSION}
     pull_policy: always
     ports:
       - 7979:7979
