@@ -41,6 +41,7 @@ pipeline {
                 echo 'Restarting plbsi-ai'
                 script {
                    sh "docker compose -f docker-compose-chroma.yml down"
+                   sh "docker rmi dthibau/poc-plb:${version}"
                    sh "docker compose -f docker-compose-chroma.yml up -d"
                 }              
              } 	
