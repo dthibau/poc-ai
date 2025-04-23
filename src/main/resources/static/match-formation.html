@@ -57,12 +57,12 @@
 </head>
 <body>
 
-<h2>Chat - Créer une formation dans PLBSI</h2>
+<h2>Chat - Trouver une formation par rapport à une demande client</h2>
 <a href="index.html">Retour</a>
 <div id="chat-box"></div>
 
 <div id="input-container">
-    <textarea id="user-input" placeholder="Indiquer la formation que vous voulez créer, n'oubliez pas la durée..."></textarea>
+    <textarea id="user-input" placeholder="Tapez votre question..."></textarea>
     <button onclick="sendMessage()">Envoyer</button>
 </div>
 
@@ -89,7 +89,7 @@
         chatBox.appendChild(aiDiv);
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        let uri = first ? "/catalogue?message=" + encodeURIComponent(userMessage) + "&uuid=" + uuid : "/converse?message=" + encodeURIComponent(userMessage) + "&uuid=" + uuid + "&first=false";
+        let uri = first ? "/chat?message=" + encodeURIComponent(userMessage) + "&uuid=" + uuid : "/converse?message=" + encodeURIComponent(userMessage) + "&uuid=" + uuid + "&first=false";
         // Récupération du flux via EventSource
         const eventSource = new EventSource(uri);
         let responseBuffer = "";
