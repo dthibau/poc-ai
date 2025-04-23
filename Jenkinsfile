@@ -10,7 +10,7 @@ pipeline {
         stage('Deploy to Docker Hub') {
             steps {
                 echo 'Building image'
-                sh './gradlew clean bootBuildImage'
+                sh './gradlew clean check bootBuildImage'
                 
                 script {
                     def version = sh(script: "./gradlew properties | grep version:", returnStdout: true).substring(9).trim()
