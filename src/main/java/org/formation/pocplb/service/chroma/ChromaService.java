@@ -1,6 +1,5 @@
-package org.formation.pocplb.service;
+package org.formation.pocplb.service.chroma;
 
-import org.elasticsearch.client.RestClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;

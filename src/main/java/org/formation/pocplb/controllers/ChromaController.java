@@ -1,6 +1,6 @@
 package org.formation.pocplb.controllers;
 
-import org.formation.pocplb.service.ChromaService;
+import org.formation.pocplb.service.chroma.ChromaService;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
