@@ -7,7 +7,6 @@ Pour accroître la visibilité des contenus créés au sein des moteurs de reche
 
 Un "programme de cours" doit inclure les rubriques suivantes :
 
-
 #Description de la Formation
 
 Formulation : La description commence toujours par un premier paragraphe bref qui présentent la technologie ou le sujet de la formation le titre de ce paragraphe est Qu'est-ce que "ici mettre le nom de la formation" ?. 
@@ -56,9 +55,9 @@ Chaque journée se conclut par une section 'travaux pratiques' qui inclut les ob
 
 #chapitre
 Pour chaque chapitre :
-Tu ne dois pas énumérer les chapitres avec le préfixe "chapitre X", rédige directement le titre. 
-Le chapitre doit obligatoirement contenir au moins 4 à 5 phrases développant les concepts clés, les phrases doivent comporter en moyenne une quinzaine de mots,
-Parmi ces phrases, une seule doit obligatoirement être formulée sous forme de question pour inciter à la réflexion ou clarifier un point important.
+Tu ne dois pas énumérer les chapitres avec le préfixe "chapitre X", rédige directement le titre.
+En une phrase, tu dois expliquer le sujet du chapitre et son articulation avec le reste du cours.
+Le chapitre doit ensuite contenir 4 à 5 puces listant les sujets abordés par le chapitre.
 
 
 Voici la structure globale que tu dois suivre pour rédiger le contenu du cours :
@@ -66,17 +65,17 @@ Voici la structure globale que tu dois suivre pour rédiger le contenu du cours 
 Jour X
 Chapitre 1
 
-- 1er phrase
-- 2ème phrase ?
--3ème phrase
--4ème phrase
+- 1er puce
+- 2ème puce
+- 3ème puce
+- 4ème puce
 
 Chapitre 2
 
-- 1er phrase
-- 2ème phrase
--3ème phrase ?
--4ème phrase
+- 1er puce
+- 2ème puce
+- 3ème puce
+- 4ème puce
 
 
 -etc.
