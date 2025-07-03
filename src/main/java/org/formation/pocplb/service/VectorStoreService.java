@@ -17,7 +17,7 @@ public class VectorStoreService {
     public VectorStoreService(VectorStore vectorStore) {
         this.vectorStore = vectorStore;
     }
-    List<Document> searchTopN(String query, int n) {
+    public List<Document> searchTopN(String query, int n) {
         log.info("Starting similarity search");
         List<Document> results = this.vectorStore.similaritySearch(SearchRequest.builder().query(query).topK(n).build());
         log.info("Found {} documents", results.size());

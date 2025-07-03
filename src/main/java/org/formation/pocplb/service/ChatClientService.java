@@ -54,6 +54,9 @@ public class ChatClientService {
                 .stream()
                 .content();
     }
+
+
+
     public Flux<String> getAnswer(Question question, String uuid) {
 
         List<Document> results = vectorStoreService.searchTopN(question.profil(), 3);

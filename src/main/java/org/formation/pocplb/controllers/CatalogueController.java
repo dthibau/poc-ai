@@ -4,11 +4,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.formation.pocplb.model.Question;
 import org.formation.pocplb.service.ChatClientService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.formation.pocplb.service.VectorStoreService;
+import org.springframework.ai.document.Document;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -16,6 +17,7 @@ import reactor.core.publisher.Flux;
 @RequestMapping("/catalogue")
 public class CatalogueController {
     private final ChatClientService chatClientService;
+    private final VectorStoreService vectorStoreService;
 
     private boolean openB;
     private boolean openH3;
@@ -26,6 +28,11 @@ public class CatalogueController {
         return chatClientService.getCatalogue(message, uuid).map(this::formatMessage);
     }
 
+    @PostMapping("/search")
+    public List<Document> searchCatalogue(@RequestParam String objectifsFormation) {
+
+        return vectorStoreService.searchTopN(objectifsFormation,1);
+    }
     // Made public for testing
     public String formatMessage(String message) {
         log.debug("Original message : {}", message);

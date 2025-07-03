@@ -4,6 +4,7 @@ package org.formation.pocplb.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.formation.pocplb.model.views.FormationViews;
 import org.formation.pocplb.repository.FormationRepository;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.VectorStore;
@@ -40,7 +41,7 @@ public class IndexingService {
                     log.info("Document {} is too big ",objectMapper.writeValueAsString(formation));
                     log.warn("Document {} is too big {}",formation.getReference(),nbTokens);
                 }
-                document = new Document(formation.getReference(),objectMapper.writeValueAsString(formation), Map.of("type","formation"));
+                document = new Document(formation.getReference(),objectMapper.writerWithView(FormationViews.SimpleView.class).writeValueAsString(formation), Map.of("type","formation_simple"));
                 vectorStore.add(Collections.singletonList(document));
                 log.info("Storing {}",formation.getReference());
             } catch (JsonProcessingException e) {

@@ -2,8 +2,10 @@ package org.formation.pocplb.model.plbsi;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import jakarta.persistence.*;
 import lombok.Data;
+import org.formation.pocplb.model.views.FormationViews;
 import org.springframework.stereotype.Indexed;
 
 import javax.validation.constraints.Min;
@@ -27,11 +29,14 @@ public class Formation implements Serializable, Comparable<Formation> {
     @JsonIgnore
     private Integer idFormation;
     @Column(name = "for_reference", columnDefinition = "text")
+    @JsonView(FormationViews.SimpleView.class)
     private String reference;
+    @JsonView(FormationViews.SimpleView.class)
     @Column(name = "for_libelle", columnDefinition = "text")
     private String libelle;
     @Column(name = "for_duree", columnDefinition = "decimal")
     @Min(value = 1)
+    @JsonView(FormationViews.SimpleView.class)
     private Integer duree;
     @Column(name = "for_prix", columnDefinition = "decimal")
     private Float prix;
@@ -45,6 +50,7 @@ public class Formation implements Serializable, Comparable<Formation> {
     private String blocPublic = "";
 
     @Column(name = "for_precision_libelle", columnDefinition = "text")
+    @JsonView(FormationViews.SimpleView.class)
     private String sousTitre;
 
 
@@ -58,11 +64,11 @@ public class Formation implements Serializable, Comparable<Formation> {
     private String contenu;
     @Lob
     @Column(name = "for_objectifs_operationnels", columnDefinition = "mediumtext")
-    @JsonIgnore
+    @JsonView(FormationViews.SimpleView.class)
     private String objectifs_operationnels;
     @Lob
     @Column(name = "for_objectifs", columnDefinition = "mediumtext")
-    @JsonIgnore
+    @JsonView(FormationViews.SimpleView.class)
     private String objectifs_pedagogiques;
     @Lob
     @Column(name = "for_prerequis", columnDefinition = "mediumtext")

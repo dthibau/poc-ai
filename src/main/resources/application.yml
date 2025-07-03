@@ -69,3 +69,15 @@ spring:
     url: jdbc:mysql://plb-rec.plb.fr:3306/plbconsult_rec
     username: app_plbsi_rec
     password: Ghnv67g72F96kXx9N5BjE5UnWZjVzMVd47a34
+
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+  datasource:
+    url: jdbc:mysql://plb-prod.plb.fr:3306/plbconsult
+    username: plbsi
+    password: R6sdg482ze68by42unrt68i4il6o4mz68t4ze

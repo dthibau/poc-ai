@@ -10,6 +10,8 @@ import org.springframework.web.client.RestClient;
 @Profile("chroma")
 public class ChromaService {
 
+    public static String FORMATIONS_COLLECTION_ID = "formations";
+    public static String OBJECTIFS_COLLECTION_ID = "objectifs";
 
     private static final String CHROMA_COLLECTIONS = "/api/v1/collections";
     private static final String COUNT_COLLECTION = "/api/v1/collections/{collectionId}/count";
