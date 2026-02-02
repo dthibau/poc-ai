@@ -16,11 +16,15 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/catalogue")
 public class CatalogueController {
+    public static Double SEUIL_PERTINENCE=0.8d;
+
     private final ChatClientService chatClientService;
     private final VectorStoreService vectorStoreService;
 
     private boolean openB;
     private boolean openH3;
+
+
 
     @GetMapping
     public Flux<String> askQuestion(@RequestParam String message, @RequestParam String uuid) {
